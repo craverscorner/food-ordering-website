@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography, TextField, Button, Box, Link, Alert } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
+import { useCart } from '../context/CartContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');

@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, CircularProgress, Alert, Box } from '@mui/material';
+import {
+  Box, Typography, CircularProgress, Alert, Container, Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, AppBar, CssBaseline, Button, Grid, Paper
+} from '@mui/material';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
+import CategoryIcon from '@mui/icons-material/Category';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import { supabase } from '../supabaseClient';
+import MenuManager from './MenuManager';
+import AdminOrders from './AdminOrders';
+import CategoryManager from './CategoryManager';
+import CouponManager from './CouponManager';
+
+const drawerWidth = 220;
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState('');
+  const [selectedMenu, setSelectedMenu] = useState('dashboard');
 
   useEffect(() => {
     const checkAdmin = async () => {
@@ -54,15 +67,67 @@ const AdminDashboard = () => {
   }
 
   return (
-    <Container maxWidth="md" sx={{ mt: 8 }}>
-      <Typography variant="h4" gutterBottom>
-        Admin Dashboard
-      </Typography>
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h6">Welcome, Admin!</Typography>
-        {/* Add more admin features here, e.g., user management, order management, etc. */}
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+        <Toolbar>
+          <Typography variant="h6" noWrap component="div">
+            Admin Dashboard
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+        }}
+      >
+        <Toolbar />
+        <Box sx={{ overflow: 'auto' }}>
+          <List>
+            <ListItem button selected={selectedMenu === 'dashboard'} onClick={() => setSelectedMenu('dashboard')}>
+              <ListItemIcon><DashboardIcon /></ListItemIcon>
+              <ListItemText primary="Dashboard Home" />
+            </ListItem>
+            <ListItem button selected={selectedMenu === 'menu'} onClick={() => setSelectedMenu('menu')}>
+              <ListItemIcon><RestaurantMenuIcon /></ListItemIcon>
+              <ListItemText primary="Menu Management" />
+            </ListItem>
+            <ListItem button selected={selectedMenu === 'categories'} onClick={() => setSelectedMenu('categories')}>
+              <ListItemIcon><CategoryIcon /></ListItemIcon>
+              <ListItemText primary="Categories & Subcategories" />
+            </ListItem>
+            <ListItem button selected={selectedMenu === 'orders'} onClick={() => setSelectedMenu('orders')}>
+              <ListItemIcon><RestaurantMenuIcon /></ListItemIcon>
+              <ListItemText primary="Orders" />
+            </ListItem>
+            <ListItem button selected={selectedMenu === 'coupons'} onClick={() => setSelectedMenu('coupons')}>
+              <ListItemIcon><LocalOfferIcon /></ListItemIcon>
+              <ListItemText primary="Coupons & Offers" />
+            </ListItem>
+          </List>
+        </Box>
+      </Drawer>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Toolbar />
+        {selectedMenu === 'dashboard' && (
+          <Box>
+            <Typography variant="h4" gutterBottom>
+              Welcome, Admin!
+            </Typography>
+            <Typography variant="body1">
+              Use the side menu to manage menu items and more.
+            </Typography>
+          </Box>
+        )}
+        {selectedMenu === 'menu' && <MenuManager />}
+        {selectedMenu === 'categories' && <CategoryManager />}
+        {selectedMenu === 'orders' && <AdminOrders />}
+        {selectedMenu === 'coupons' && <CouponManager />}
       </Box>
-    </Container>
+    </Box>
   );
 };
 
