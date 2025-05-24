@@ -157,6 +157,8 @@ const Cart = () => {
     country: 'GB',
   });
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   // Calculate subtotal
   const calculateSubtotal = () => {
     return Number(cart.reduce((sum, item) => {
@@ -344,7 +346,7 @@ const Cart = () => {
       const stripeDiscount = formatAmountForStripe(discount);
       const stripeTotal = Math.round(finalTotal * 100);
 
-      const response = await fetch('http://localhost:3001/api/create-payment-intent', {
+      const response = await fetch(`${API_URL}/api/create-payment-intent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -388,7 +390,7 @@ const Cart = () => {
       setLoading(true);
       
       // Confirm the payment
-      const response = await fetch('http://localhost:3001/api/confirm-payment', {
+      const response = await fetch(`${API_URL}/api/confirm-payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
