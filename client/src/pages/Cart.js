@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Container, Typography, Box, Button, Grid, Card, CardContent, IconButton, Alert, Snackbar, TextField, InputAdornment, CircularProgress, Divider, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Container, Typography, Box, Button, Grid, Card, CardContent, IconButton, Alert, Snackbar, TextField, InputAdornment, CircularProgress, Divider, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Select, MenuItem, Paper } from '@mui/material';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -473,48 +473,52 @@ const Cart = () => {
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
           {cart.map((item) => (
-            <Card key={item.id} sx={{ mb: 2 }}>
-              <CardContent>
-                <Grid container alignItems="center" spacing={2}>
-                  <Grid item xs={12} sm={3}>
-                    {item.image_url && (
-                      <img 
-                        src={item.image_url} 
-                        alt={item.name} 
-                        style={{ width: '100%', height: 'auto', borderRadius: '4px' }} 
-                      />
-                    )}
-                  </Grid>
-                  <Grid item xs={12} sm={5}>
-                    <Typography variant="h6">{item.name}</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {item.price !== undefined && item.price !== null ?
-                        item.price.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' }) :
-                        ''}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={2}>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <IconButton 
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        disabled={item.quantity <= 1}
-                      >
-                        <RemoveIcon />
-                      </IconButton>
-                      <Typography sx={{ mx: 1 }}>{item.quantity}</Typography>
-                      <IconButton onClick={() => updateQuantity(item.id, item.quantity + 1)}>
-                        <AddIcon />
-                      </IconButton>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} sm={2} sx={{ textAlign: 'right' }}>
-                    <IconButton color="error" onClick={() => removeFromCart(item.id)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
+            <Paper key={item.id} sx={{ display: 'flex', alignItems: 'center', mb: 2, p: 2 }}>
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="h6" sx={{ fontWeight: 700 }}>{item.name}</Typography>
+                <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                  £{item.price?.toFixed(2)}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" noWrap>
+                  {item.description}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', ml: 2 }}>
+                {item.image_url && (
+                  <Box
+                    component="img"
+                    src={item.image_url}
+                    alt={item.name}
+                    sx={{ width: 90, height: 90, objectFit: 'cover', borderRadius: 2, mb: 1 }}
+                  />
+                )}
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    sx={{ minWidth: 32, px: 0 }}
+                    onClick={() => {
+                      if (item.quantity === 1) {
+                        removeFromCart(item.id);
+                      } else {
+                        updateQuantity(item.id, item.quantity - 1);
+                      }
+                    }}
+                  >
+                    -
+                  </Button>
+                  <Typography sx={{ mx: 1, minWidth: 20, textAlign: 'center' }}>{item.quantity}</Typography>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    sx={{ minWidth: 32, px: 0 }}
+                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                  >
+                    +
+                  </Button>
+                </Box>
+              </Box>
+            </Paper>
           ))}
         </Grid>
         <Grid item xs={12} md={4}>
