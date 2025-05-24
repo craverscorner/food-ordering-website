@@ -22,16 +22,10 @@ function getStripeImage(img) {
 }
 
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:3002',
-    'http://localhost:3003',
-    'https://food-ordering-website.onrender.com',
-    'https://craverscorner.onrender.com'
-  ],
+  origin: true, // Allow all origins in development
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
 }));
 
 app.post('/api/create-payment-intent', async (req, res) => {

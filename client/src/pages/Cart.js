@@ -350,6 +350,7 @@ const Cart = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         credentials: 'include',
         body: JSON.stringify({ 
@@ -365,8 +366,15 @@ const Cart = () => {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || errorData.message || `HTTP error! status: ${response.status}`);
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || errorData.message || `HTTP error! status: ${response.status}`);
+        } else {
+          const text = await response.text();
+          console.error('Non-JSON response:', text);
+          throw new Error(`Server error: ${response.status}`);
+        }
       }
 
       const data = await response.json();
