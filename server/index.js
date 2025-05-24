@@ -55,8 +55,8 @@ app.post('/api/create-payment-intent', async (req, res) => {
         userId: userId || '',
         couponId: couponId || '',
         isGuestCheckout: isGuestCheckout ? 'true' : 'false',
-        items: JSON.stringify(items),
-        userInfo: JSON.stringify(userInfo)
+        itemSummary: items.map(item => `${item.name}x${item.quantity}`).join(', '),
+        userEmail: userInfo?.email || ''
       }
     });
 
