@@ -14,7 +14,7 @@ import { Elements, PaymentElement, PaymentRequestButtonElement, useStripe, useEl
 import { useAuth } from '../context/AuthContext';
 
 // Initialize Stripe with the publishable key
-const stripePromise = loadStripe('pk_live_51OwkuOP1ZtCJfXVW0FBHdfBnAo20fxfcQn3BIhBGrLhwT8N8Wg63wo3xVeM5RBPb74ATFlblRLawwiBptNauajHP00l5LoeOzz');
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
 // Payment Form Component
 const PaymentForm = ({ userInfo, onSuccess, onError, totalPence }) => {
